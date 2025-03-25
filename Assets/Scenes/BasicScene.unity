@@ -171,6 +171,10 @@ MonoBehaviour:
   OnJump:
     m_PersistentCalls:
       m_Calls: []
+  shipTransform: {fileID: 616764225}
+  tiltAngle: 30
+  tiltSpeed: 5
+  normalizeInput: 1
 --- !u!114 &17322583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,6 +193,10 @@ MonoBehaviour:
   OnJump:
     m_PersistentCalls:
       m_Calls: []
+  shipTransform: {fileID: 0}
+  tiltAngle: 30
+  tiltSpeed: 5
+  normalizeInput: 1
 --- !u!4 &17322584
 Transform:
   m_ObjectHideFlags: 0
@@ -198,11 +206,11 @@ Transform:
   m_GameObject: {fileID: 17322580}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.68085355, y: -6.1624017, z: 20.861721}
+  m_LocalPosition: {x: 0.68085355, y: 0.8575988, z: 10.861721}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1518974265}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &49135013
 GameObject:
@@ -1293,7 +1301,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1633138748}
-  - {fileID: 17322584}
   m_Father: {fileID: 616764225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1631676171
@@ -1919,6 +1926,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 899029680}
   - {fileID: 2037387616}
+  - {fileID: 17322584}
   - {fileID: 949846294}
   - {fileID: 1886288433}
   - {fileID: 185335463}
