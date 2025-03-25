@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer(Vector2 inputVector)
     {
-        Vector3 moveDirection = new Vector3(inputVector.x, inputVector.y, 0); 
+        Vector3 moveDirection = new Vector3(inputVector.x, inputVector.y, 0);
         playerRigidbody.linearVelocity = moveDirection * moveSpeed;
     }
 }
