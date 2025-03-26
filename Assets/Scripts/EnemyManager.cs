@@ -4,7 +4,7 @@ public class GameManager : MonoBehaviour
 {
     public GameObject enemy;           // The main enemy object (parent)
     public int health = 5;
-    public float moveSpeed = 50f;
+    public float moveSpeed = 5f;
     public Vector3 moveDirection = Vector3.forward;
 
     private void Start()

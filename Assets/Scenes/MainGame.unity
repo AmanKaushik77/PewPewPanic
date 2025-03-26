@@ -592,37 +592,6 @@ MonoBehaviour:
   rightGun: {fileID: 1631676172}
   bulletTarget: {fileID: 108394926}
   bulletSpeed: 40
---- !u!1 &657517179
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 657517180}
-  m_Layer: 0
-  m_Name: SpawnWall
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &657517180
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 657517179}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 142.32518, y: -125.43991, z: 186.7456}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &801334622
 GameObject:
   m_ObjectHideFlags: 0
@@ -1475,6 +1444,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1275295672}
     m_Modifications:
+    - target: {fileID: -6967865789050231771, guid: 9153583b362674eb781eb707c6094577, type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 7808116914969374433, guid: 9153583b362674eb781eb707c6094577, type: 3}
+    - target: {fileID: -6967865789050231771, guid: 9153583b362674eb781eb707c6094577, type: 3}
+      propertyPath: moveSpeed
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
       propertyPath: m_LocalScale.x
       value: 10
@@ -1564,6 +1541,5 @@ SceneRoots:
   - {fileID: 949846294}
   - {fileID: 185335463}
   - {fileID: 1364213611}
-  - {fileID: 657517180}
   - {fileID: 1275295672}
   - {fileID: 130570835}
