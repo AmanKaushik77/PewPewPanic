@@ -14,15 +14,21 @@ public class GameManager : MonoBehaviour
         {
             enemy = transform.parent.gameObject;
         }
-    
     }
 
     private void Update()
     {
         if (enemy != null)
         {
+            // Move the enemy.
             enemy.transform.position += moveDirection * moveSpeed * Time.deltaTime;
+
+            // Check if the enemy has passed z = -3.
+            if (enemy.transform.position.z < -3f)
+            {
+                Debug.Log("Enemy " + enemy.name + " passed z = -3 and will be destroyed.");
+                Destroy(enemy);
+            }
         }
     }
-
 }
