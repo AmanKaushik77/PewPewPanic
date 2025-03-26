@@ -349,14 +349,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3398711c50404367966822c57375b40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 7808116914969374433, guid: 9153583b362674eb781eb707c6094577, type: 3}
-  spawnInterval: 2
-  fixedZ: 150
+  waveEnemyCounts: 05000000070000000a000000
+  spawnInterval: 4
+  timeBetweenWaves: 5
   xMin: -70
   xMax: 70
-  spacingDistance: 10
   yMin: 0
   yMax: 50
+  fixedZ: 150
+  enemyPrefab: {fileID: 7808116914969374433, guid: 9153583b362674eb781eb707c6094577, type: 3}
 --- !u!4 &111339662
 Transform:
   m_ObjectHideFlags: 0
@@ -553,11 +554,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &603958924 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-  m_PrefabInstance: {fileID: 792336561}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &616764221 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ceb1d5330696dc8419bab98c93b25880, type: 3}
@@ -612,63 +608,6 @@ MonoBehaviour:
   rightGun: {fileID: 1631676172}
   bulletTarget: {fileID: 108394926}
   bulletSpeed: 40
---- !u!1001 &792336561
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1275295672}
-    m_Modifications:
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -36.53548
-      objectReference: {fileID: 0}
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 424.30045
-      objectReference: {fileID: 0}
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -186.84407
-      objectReference: {fileID: 0}
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 7428635202110862427, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7808116914969374433, guid: 9153583b362674eb781eb707c6094577, type: 3}
-      propertyPath: m_Name
-      value: Enemy
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9153583b362674eb781eb707c6094577, type: 3}
 --- !u!1 &899029677
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,8 +978,7 @@ Transform:
   m_LocalPosition: {x: 40.435482, y: -412.40045, z: 316.14407}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 603958924}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1275295673
