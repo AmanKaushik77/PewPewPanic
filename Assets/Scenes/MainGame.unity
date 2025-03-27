@@ -606,8 +606,10 @@ MonoBehaviour:
   bulletPrefab: {fileID: 2502033503322019251, guid: ad14b9f304ad1e046a28c8a819d9af9d, type: 3}
   leftGun: {fileID: 1766687349}
   rightGun: {fileID: 1631676172}
-  bulletTarget: {fileID: 108394926}
-  bulletSpeed: 40
+  bulletTarget: {fileID: 1018388460}
+  crosshair: {fileID: 982484111}
+  bulletSpeed: 100
+  crosshairRange: 50
 --- !u!1 &899029677
 GameObject:
   m_ObjectHideFlags: 0
