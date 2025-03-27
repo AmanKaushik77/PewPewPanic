@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Rigidbody playerRigidbody;
-    [SerializeField] private float moveSpeed = 25f;
+    [SerializeField] private float moveSpeed = 40f;
     [SerializeField] private InputManager inputManager;
 
     private void Start()
