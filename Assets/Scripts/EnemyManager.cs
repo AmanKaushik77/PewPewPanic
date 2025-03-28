@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class EnemyManager : MonoBehaviour
 {
     public GameObject enemy;           // The main enemy object (parent)
     public int health = 5;
-    public float moveSpeed = 5f;
+    public float moveSpeed = 30f;        // For bosses, we want a fixed speed of 30.
     public Vector3 moveDirection = Vector3.forward;
+    
+    // Set this flag on non-boss enemies if needed.
+    public bool isBoss = true;           
 
     private void Start()
     {
@@ -13,6 +16,17 @@ public class GameManager : MonoBehaviour
         if (enemy == null && transform.parent != null)
         {
             enemy = transform.parent.gameObject;
+        }
+        
+        // For non-boss enemies, you might use random speed.
+        if (!isBoss)
+        {
+            moveSpeed = Random.Range(5f, 20f);
+            Debug.Log("Assigned random moveSpeed: " + moveSpeed);
+        }
+        else
+        {
+            Debug.Log("Boss moveSpeed set to: " + moveSpeed);
         }
     }
 
