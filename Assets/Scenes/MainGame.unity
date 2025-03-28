@@ -584,8 +584,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Constraints: 112
+  m_CollisionDetection: 2
 --- !u!4 &616764225 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ceb1d5330696dc8419bab98c93b25880, type: 3}
@@ -610,6 +610,29 @@ MonoBehaviour:
   crosshair: {fileID: 982484111}
   bulletSpeed: 100
   crosshairRange: 50
+--- !u!136 &616764229
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616764221}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3
+  m_Height: 2.9475918
+  m_Direction: 1
+  m_Center: {x: 0, y: -0.00000047683716, z: 0.0000021457672}
 --- !u!1 &899029677
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,6 +803,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: ceb1d5330696dc8419bab98c93b25880, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: ceb1d5330696dc8419bab98c93b25880, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: aa36aaf9a89beac4c9633c4408a3d3da, type: 2}
@@ -810,6 +837,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ceb1d5330696dc8419bab98c93b25880, type: 3}
       insertIndex: -1
       addedObject: {fileID: 616764226}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ceb1d5330696dc8419bab98c93b25880, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 616764229}
   m_SourcePrefab: {fileID: 100100000, guid: ceb1d5330696dc8419bab98c93b25880, type: 3}
 --- !u!1 &982484110
 GameObject:
