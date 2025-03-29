@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 6068994860810166840}
-  health: 5
+  health: 10
   moveSpeed: 30
   moveDirection: {x: 0, y: 0, z: -1}
   isBoss: 1
