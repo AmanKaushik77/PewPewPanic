@@ -4,12 +4,10 @@ public class EnemyManager : MonoBehaviour
 {
     public GameObject enemy;         // The main enemy object (parent).
     public int health = 5;
-    public float moveSpeed = 30f;      // Fixed speed for bosses.
+    public float moveSpeed = 30f;    // Fixed speed for bosses.
     public Vector3 moveDirection = Vector3.forward;
 
-    // For normal enemies, set isBoss to false.
     public bool isBoss = true;
-    // The 'wave' field is not used for scoring; GameManager.CurrentWave is used for non-boss enemies.
     public int wave = 1;
 
     private void Start()
@@ -38,12 +36,35 @@ public class EnemyManager : MonoBehaviour
             if (enemy.transform.position.z < -3f)
             {
                 Debug.Log("Enemy " + enemy.name + " passed z = -3 and will be destroyed.");
-                GameManager gm = FindObjectOfType<GameManager>();
+                GameManager gm = FindFirstObjectByType<GameManager>();
                 if (gm != null)
                 {
                     gm.EnemyPassedBoundary();
                 }
                 Destroy(enemy);
+            }
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            GameManager gm = FindObjectOfType<GameManager>();
+            if (gm != null)
+            {
+                // Use CurrentWave for non-boss enemies, fixed wave 4 for boss
+                int waveToReport = isBoss ? 4 : gm.CurrentWave;
+                gm.EnemyDestroyed(waveToReport);
+            }
+            if (enemy != null)
+            {
+                Destroy(enemy);
+            }
+            else
+            {
+                Destroy(gameObject); // Fallback if enemy reference is null
             }
         }
     }

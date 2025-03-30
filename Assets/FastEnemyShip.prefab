@@ -82,7 +82,7 @@ GameObject:
   - component: {fileID: 3191710843233241348}
   m_Layer: 0
   m_Name: FastEnemyShip
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -173,3 +173,4 @@ MonoBehaviour:
   moveSpeed: 30
   moveDirection: {x: 0, y: 0, z: -1}
   isBoss: 1
+  wave: 1

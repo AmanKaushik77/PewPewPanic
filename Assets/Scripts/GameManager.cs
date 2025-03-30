@@ -4,21 +4,28 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private ScoreCounterUI scoreCounterUI;  // Reference to the animated score UI
-    [SerializeField] private TextMeshProUGUI livesText;        // UI element for displaying lives
-    [SerializeField] private TextMeshProUGUI waveText;         // UI element for displaying the current wave
+    [SerializeField] private ScoreCounterUI scoreCounterUI;
+    [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private TextMeshProUGUI waveText;
+
+    [Header("Power-Up Settings")]
+    public float powerUpDuration = 10f;
+    public float speedBuffMultiplier = 1.5f;
+    public GameObject laserPrefab; // Optional: if you want to spawn laser visuals
 
     private int currentScore = 0;
     private int lives = 5;
     private int currentWave = 1;
 
-    // Expose the current wave for other scripts.
+    // Power-up states
+    public bool HasLaser { get; private set; } = false;
+    public float SpeedMultiplier { get; private set; } = 1f;
+
     public int CurrentWave { get { return currentWave; } }
 
     private void Start()
     {
         UpdateLivesUI();
-        // When the game starts, simply display "Wave: 1"
         if (waveText != null)
         {
             waveText.text = "Wave: " + currentWave;
@@ -30,14 +37,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Call this method when a wave is cleared to update to the next wave.
-    /// It immediately displays "Wave Cleared" for 2 seconds, then updates:
-    /// if newWave equals 4, it shows "Boss Level"; otherwise, it shows "Wave: X".
-    /// </summary>
     public void SetWave(int newWave)
     {
-        StopAllCoroutines(); // Ensure no overlapping transitions.
+        StopAllCoroutines();
         StartCoroutine(WaveTransition(newWave));
     }
 
@@ -47,13 +49,8 @@ public class GameManager : MonoBehaviour
         {
             waveText.text = "Wave Cleared";
             Debug.Log("WaveText set to: Wave Cleared");
-            Canvas.ForceUpdateCanvases(); // Force UI update immediately.
+            Canvas.ForceUpdateCanvases();
         }
-        else
-        {
-            Debug.LogWarning("WaveText UI element is not assigned in the inspector.");
-        }
-
         yield return new WaitForSeconds(2f);
 
         currentWave = newWave;
@@ -72,12 +69,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Called when an enemy is destroyed.
-    /// For non-boss enemies, points are based on the current wave:
-    ///   Wave 1 = 100 points, Wave 2 = 200 points, Wave 3 = 300 points.
-    /// For bosses (isBoss == true), the score is 500 points.
-    /// </summary>
     public void EnemyDestroyed(int wave)
     {
         int scoreToAdd = 0;
@@ -99,9 +90,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Called when an enemy passes z = -3.
-    /// </summary>
     public void EnemyPassedBoundary()
     {
         lives--;
@@ -119,5 +107,39 @@ public class GameManager : MonoBehaviour
             livesText.text = "Lives: " + lives;
         else
             Debug.LogWarning("LivesText UI element is not assigned in the inspector.");
+    }
+
+    // Power-up methods
+    public void ActivateLaserPowerUp()
+    {
+        StartCoroutine(LaserPowerUpRoutine());
+    }
+
+    public void ActivateSpeedBuff()
+    {
+        StartCoroutine(SpeedBuffRoutine());
+    }
+
+    private IEnumerator LaserPowerUpRoutine()
+    {
+        HasLaser = true;
+        Debug.Log("Laser Power-Up Activated!");
+        // Add any visual or audio effects here if needed
+
+        yield return new WaitForSeconds(powerUpDuration);
+
+        HasLaser = false;
+        Debug.Log("Laser Power-Up Expired!");
+    }
+
+    private IEnumerator SpeedBuffRoutine()
+    {
+        SpeedMultiplier = speedBuffMultiplier;
+        Debug.Log($"Speed Buff Activated! Multiplier: {SpeedMultiplier}");
+
+        yield return new WaitForSeconds(powerUpDuration);
+
+        SpeedMultiplier = 1f;
+        Debug.Log("Speed Buff Expired!");
     }
 }
