@@ -1,20 +1,19 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class WaveManager : MonoBehaviour
 {
     [Header("Wave Settings (Normal Enemies)")]
-    public int[] waveEnemyCounts = new int[] { 1, 2, 3 };  // For testing: 1 enemy in wave 1, 2 in wave 2, 3 in wave 3.
-    public float spawnInterval = 1f;       // Time between enemy spawns within a wave.
-    public float timeBetweenWaves = 10f;   // Wait time between waves.
+    public int[] waveEnemyCounts = new int[] { 1, 2, 3 };
+    public float spawnInterval = 1f;
+    public float timeBetweenWaves = 10f;
 
     [Header("Spawn Area Settings")]
     public float xMin = -70f;
     public float xMax = 70f;
     public float yMin = 0f;
     public float yMax = 50f;
-    public float fixedZ = 150f;            // All enemies spawn at z = 150.
+    public float fixedZ = 150f;
 
     [Header("Post-Wave Boss & Fast Enemy Settings")]
     public Vector3 bossShipSpawnPosition = new Vector3(0f, 20f, 175f);
@@ -22,12 +21,16 @@ public class WaveManager : MonoBehaviour
     public float fastEnemySpawnInterval = 5f;
 
     [Header("References (Prefabs)")]
-    public GameObject enemyPrefab;         // Normal enemy prefab.
-    public GameObject fastEnemyShipPrefab;   // Fast enemy prefab.
-    public GameObject bossShipPrefab;        // Boss enemy prefab.
+    public GameObject enemyPrefab;
+    public GameObject fastEnemyShipPrefab;
+    public GameObject bossShipPrefab;
 
-    // List to track spawned normal enemies.
-    private List<GameObject> activeEnemies = new List<GameObject>();
+    [Header("Power-Up UI")]
+    public GameObject powerUpPanel; // Assign this in the Inspector
+    private bool powerUpSelected = false;
+
+    private GameManager gameManager;
+    private System.Collections.Generic.List<GameObject> activeEnemies = new System.Collections.Generic.List<GameObject>();
 
     private void Start()
     {
@@ -36,20 +39,30 @@ public class WaveManager : MonoBehaviour
             Debug.LogError("One or more prefabs are not assigned in the WaveManager!");
             return;
         }
+        if (powerUpPanel == null)
+        {
+            Debug.LogError("PowerUp Panel is not assigned in the WaveManager!");
+            return;
+        }
+
+        gameManager = FindObjectOfType<GameManager>();
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager not found in the scene!");
+            return;
+        }
+
+        powerUpPanel.SetActive(false); // Hide panel at start
         StartCoroutine(SpawnWaves());
     }
 
     IEnumerator SpawnWaves()
     {
-        // The GameManager should already display "Wave: 1" at start.
-        GameManager gm = FindObjectOfType<GameManager>();
-
         for (int waveIndex = 0; waveIndex < waveEnemyCounts.Length; waveIndex++)
         {
             int enemyCount = waveEnemyCounts[waveIndex];
             Debug.Log("Starting Wave " + (waveIndex + 1) + " with " + enemyCount + " enemy(ies).");
 
-            // Spawn the designated number of normal enemies.
             for (int i = 0; i < enemyCount; i++)
             {
                 float randomX = Random.Range(xMin, xMax);
@@ -64,7 +77,6 @@ public class WaveManager : MonoBehaviour
 
             Debug.Log("Completed spawning Wave " + (waveIndex + 1) + ". Waiting for all enemies to be destroyed...");
 
-            // Wait until all enemies from this wave are destroyed.
             while (activeEnemies.Count > 0)
             {
                 activeEnemies.RemoveAll(item => item == null);
@@ -73,13 +85,19 @@ public class WaveManager : MonoBehaviour
 
             Debug.Log("Wave " + (waveIndex + 1) + " cleared.");
 
-            // If not the last wave, update the GameManager for the next wave.
             if (waveIndex < waveEnemyCounts.Length - 1)
             {
-                if (gm != null)
-                {
-                    gm.SetWave(waveIndex + 2);  // For example, after wave 1, set wave to 2.
-                }
+                gameManager.SetWave(waveIndex + 2);
+
+                // Show power-up selection UI
+                powerUpSelected = false;
+                powerUpPanel.SetActive(true);
+                Time.timeScale = 0f; // Pause game while selecting
+
+                yield return new WaitUntil(() => powerUpSelected);
+
+                Time.timeScale = 1f; // Resume game
+                powerUpPanel.SetActive(false);
                 yield return new WaitForSeconds(timeBetweenWaves);
             }
         }
@@ -108,5 +126,20 @@ public class WaveManager : MonoBehaviour
 
             yield return new WaitForSeconds(fastEnemySpawnInterval);
         }
+    }
+
+    // Power-up selection methods
+    public void SelectLaserPowerUp()
+    {
+        gameManager.ActivateLaserPowerUp();
+        Debug.Log("Laser Power-Up Selected");
+        powerUpSelected = true;
+    }
+
+    public void SelectSpeedBuffPowerUp()
+    {
+        gameManager.ActivateSpeedBuff();
+        Debug.Log("Speed Buff Power-Up Selected");
+        powerUpSelected = true;
     }
 }

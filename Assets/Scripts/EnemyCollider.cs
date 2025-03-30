@@ -20,7 +20,7 @@ public class EnemyCollider : MonoBehaviour
             {
                 int enemyWave = 0;
                 EnemyManager manager = enemy.GetComponent<EnemyManager>();
-                GameManager gm = FindObjectOfType<GameManager>();
+                GameManager gm = FindFirstObjectByType<GameManager>();
 
                 if (manager != null)
                 {
