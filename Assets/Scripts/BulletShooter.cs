@@ -12,24 +12,29 @@ public class BulletShooter : MonoBehaviour
 
     private Camera mainCamera;
     private GameManager gameManager;
-    private AudioManager audioManager; // Add reference to AudioManager
+    private AudioManager audioManager;
 
     void Start()
     {
         mainCamera = Camera.main;
         gameManager = FindObjectOfType<GameManager>();
-        audioManager = FindObjectOfType<AudioManager>(); // Get AudioManager reference
-        if (gameManager == null) Debug.LogError("GameManager not found!");
-        if (audioManager == null) Debug.LogError("AudioManager not found!");
+        audioManager = FindObjectOfType<AudioManager>();
+
+        if (gameManager == null)
+            Debug.LogError("GameManager not found!");
+        if (audioManager == null)
+            Debug.LogError("AudioManager not found!");
     }
 
     void Update()
     {
+        // If the crosshair or audioManager are missing/destroyed, no shooting.
+        if (crosshair == null || audioManager == null)
+            return;
+
         if (Input.GetButtonDown("Fire1") && Time.timeScale > 0f)
         {
-            // Play sound once per click
             audioManager.PlayShootSound();
-            // Shoot from both guns
             Shoot(leftGun);
             Shoot(rightGun);
         }
@@ -37,17 +42,27 @@ public class BulletShooter : MonoBehaviour
 
     void Shoot(Transform gun)
     {
+        // Safeguard in case the crosshair or gun got destroyed/unassigned
+        if (crosshair == null || gun == null || mainCamera == null)
+            return;
+
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         Transform target = bulletTarget;
         float closestDistance = float.MaxValue;
+
+        // Convert crosshair's screen position to a Vector2
         Vector2 crosshairScreenPos = crosshair.position;
 
         foreach (GameObject enemy in enemies)
         {
+            // Distance in the 3D world
             float distance3D = Vector3.Distance(gun.position, enemy.transform.position);
+
+            // Distance in the 2D screen space, relative to crosshair
             Vector3 enemyScreenPos = mainCamera.WorldToScreenPoint(enemy.transform.position);
             float distance2D = Vector2.Distance(crosshairScreenPos, new Vector2(enemyScreenPos.x, enemyScreenPos.y));
 
+            // Only pick the enemy if it's within the crosshair range
             if (distance3D < closestDistance && distance2D <= crosshairRange)
             {
                 closestDistance = distance3D;
@@ -64,13 +79,16 @@ public class BulletShooter : MonoBehaviour
             return;
         }
 
+        // Aim bullet/laser at the chosen target position
         Vector3 direction = (target.position - gun.position).normalized;
-        Quaternion spawnRotation = (gameManager != null && gameManager.HasLaser) ?
-            Quaternion.LookRotation(direction) * Quaternion.Euler(90f, 0f, 0f) :
-            Quaternion.identity;
+        Quaternion spawnRotation = (gameManager != null && gameManager.HasLaser)
+            ? Quaternion.LookRotation(direction) * Quaternion.Euler(90f, 0f, 0f)
+            : Quaternion.identity;
 
+        // Instantiate the projectile
         GameObject projectile = Instantiate(projectilePrefab, gun.position, spawnRotation);
         BulletScript bulletScript = projectile.GetComponent<BulletScript>();
+
         if (bulletScript != null)
         {
             bulletScript.SetTarget(target.position, speed);
