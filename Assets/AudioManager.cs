@@ -1,19 +1,43 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
     [Header("Audio")]
-    [SerializeField] private AudioSource shootAudioSource;    // AudioSource for shooting sound
-    [SerializeField] private AudioClip bulletSound;           // Sound for bullets
-    [SerializeField] private AudioClip laserSound;           // Sound for lasers
-    [SerializeField] private AudioSource powerUpAudioSource; // AudioSource for power-up sound
-    [SerializeField] private AudioClip powerUpSound;         // Sound for power-up selection
+    [SerializeField] private AudioSource shootAudioSource;
+    [SerializeField] private AudioClip bulletSound;
+    [SerializeField] private AudioClip laserSound;
+    [SerializeField] private AudioSource powerUpAudioSource;
+    [SerializeField] private AudioClip powerUpSound;
 
     private GameManager gameManager;
+    private float masterVolume = 1f;
+    private bool isMuted = false;
+    private static AudioManager instance;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
     void Start()
     {
-        // Ensure shoot AudioSource is assigned
         if (shootAudioSource == null)
         {
             shootAudioSource = GetComponent<AudioSource>();
@@ -23,35 +47,42 @@ public class AudioManager : MonoBehaviour
             }
         }
 
-        // Ensure power-up AudioSource is assigned
         if (powerUpAudioSource == null)
         {
             Debug.LogWarning("PowerUp AudioSource not assigned in Inspector. Attempting to find one.");
-            powerUpAudioSource = GetComponent<AudioSource>(); // Will use shootAudioSource if only one exists
+            powerUpAudioSource = GetComponent<AudioSource>();
             if (powerUpAudioSource == null)
             {
                 Debug.LogError("No power-up AudioSource found on " + gameObject.name + "!");
             }
         }
 
-        // Get GameManager reference
         gameManager = FindFirstObjectByType<GameManager>();
         if (gameManager == null)
         {
             Debug.LogError("GameManager not found in AudioManager!");
         }
+
+        // Load saved settings
+        masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        isMuted = PlayerPrefs.GetInt("IsMuted", 0) == 1;
+        UpdateVolume();
     }
 
     void Update()
     {
-        // Play shoot sound once per "Fire1" click, but not when paused
         if (Input.GetButtonDown("Fire1") && Time.timeScale > 0f)
         {
             PlayShootSound();
         }
     }
 
-    // Public method to play shoot sound based on bullet or laser
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Scene loaded: " + scene.name + ". Updating volume.");
+        UpdateVolume(); // Ensure volume is applied to all AudioSources in the new scene
+    }
+
     public void PlayShootSound()
     {
         if (shootAudioSource != null)
@@ -62,14 +93,9 @@ public class AudioManager : MonoBehaviour
                 Debug.Log("Playing " + (gameManager != null && gameManager.HasLaser ? "laser" : "bullet") + " sound from AudioManager at " + Time.time);
                 shootAudioSource.PlayOneShot(soundToPlay);
             }
-            else
-            {
-                Debug.LogWarning("No sound assigned for " + (gameManager != null && gameManager.HasLaser ? "laser" : "bullet") + " in AudioManager!");
-            }
         }
     }
 
-    // Public method to play power-up sound
     public void PlayPowerUpSound()
     {
         if (powerUpAudioSource != null && powerUpSound != null)
@@ -77,9 +103,61 @@ public class AudioManager : MonoBehaviour
             Debug.Log("Playing power-up sound from AudioManager at " + Time.time);
             powerUpAudioSource.PlayOneShot(powerUpSound);
         }
-        else
+    }
+
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = Mathf.Clamp01(volume);
+        UpdateVolume();
+        PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+        PlayerPrefs.Save();
+        Debug.Log("Master volume set to: " + masterVolume);
+    }
+
+    public void ToggleMute()
+    {
+        isMuted = !isMuted;
+        UpdateVolume();
+        PlayerPrefs.SetInt("IsMuted", isMuted ? 1 : 0);
+        PlayerPrefs.Save();
+        Debug.Log("Audio " + (isMuted ? "muted" : "unmuted"));
+    }
+
+    public bool IsMuted()
+    {
+        return isMuted;
+    }
+
+    public float GetMasterVolume()
+    {
+        return masterVolume;
+    }
+
+    private void UpdateVolume()
+    {
+        float effectiveVolume = isMuted ? 0f : masterVolume;
+        if (shootAudioSource != null)
         {
-            Debug.LogWarning("PowerUp AudioSource or sound clip not assigned in AudioManager!");
+            shootAudioSource.volume = effectiveVolume;
+            Debug.Log("Shoot AudioSource volume set to: " + effectiveVolume);
+        }
+        if (powerUpAudioSource != null)
+        {
+            powerUpAudioSource.volume = effectiveVolume;
+            Debug.Log("PowerUp AudioSource volume set to: " + effectiveVolume);
+        }
+        // Update background AudioSources
+        AudioSource[] allSources = FindObjectsOfType<AudioSource>();
+        foreach (AudioSource source in allSources)
+        {
+            if (source != shootAudioSource && source != powerUpAudioSource)
+            {
+                if (source.gameObject.CompareTag("BackgroundAudio") || source.gameObject.name == "UI")
+                {
+                    source.volume = effectiveVolume;
+                    Debug.Log("Background AudioSource on " + source.gameObject.name + " volume set to: " + effectiveVolume);
+                }
+            }
         }
     }
 }
