@@ -46,7 +46,6 @@ public class WaveManager : MonoBehaviour
             Debug.LogError("PowerUp Panel is not assigned in the WaveManager!");
             return;
         }
-
         gameManager = FindObjectOfType<GameManager>();
         if (gameManager == null)
         {
@@ -77,7 +76,6 @@ public class WaveManager : MonoBehaviour
                 float randomX = Random.Range(xMin, xMax);
                 float randomY = Random.Range(yMin, yMax);
                 Vector3 spawnPosition = new Vector3(randomX, randomY, fixedZ);
-
                 GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
                 activeEnemies.Add(enemy);
                 Debug.Log("Spawned normal enemy at: " + spawnPosition);
@@ -90,7 +88,6 @@ public class WaveManager : MonoBehaviour
                 activeEnemies.RemoveAll(item => item == null);
                 yield return null;
             }
-
             Debug.Log("Wave " + (waveIndex + 1) + " cleared.");
 
             if (waveIndex < waveEnemyCounts.Length - 1)
@@ -107,7 +104,6 @@ public class WaveManager : MonoBehaviour
                 yield return new WaitForSeconds(timeBetweenWaves);
             }
         }
-
         Debug.Log("All normal waves completed. Spawning BossShip and FastEnemyShips...");
         yield return StartCoroutine(SpawnBossAndFastEnemies());
     }
