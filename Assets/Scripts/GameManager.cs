@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Over Settings")]
     [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private string mainMenuSceneName = "Main Menu";
 
     [Header("Complete Screen Settings")]
     [SerializeField] private GameObject completePanel;
@@ -31,6 +30,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 1f;
         UpdateLivesUI();
         if (waveText != null)
         {
@@ -42,9 +42,9 @@ public class GameManager : MonoBehaviour
             scoreText.text = "Score: 0";
             Debug.Log("Initial ScoreText: Score: 0");
         }
-        if (gameOverPanel != null)
+        if (gameOverPanel != null) 
             gameOverPanel.SetActive(false);
-        if (completePanel != null)
+        if (completePanel != null) 
             completePanel.SetActive(false);
     }
 
@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
             Canvas.ForceUpdateCanvases();
         }
         yield return new WaitForSeconds(2f);
+
         currentWave = newWave;
         if (waveText != null)
         {
@@ -128,8 +129,10 @@ public class GameManager : MonoBehaviour
     private IEnumerator RestartGameAfterDelay()
     {
         yield return new WaitForSecondsRealtime(2f);
+        DestroyAllObjects();
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Main Menu");
+        Debug.Log("Switching to MainMenu scene (Game Over).");
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void BossDestroyed()
@@ -150,9 +153,21 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator BossRestartAfterDelay()
     {
-        yield return new WaitForSecondsRealtime(5f);
+        yield return new WaitForSecondsRealtime(3f);
+        DestroyAllObjects();
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Main Menu");
+        Debug.Log("Switching to MainMenu scene (Boss Destroyed).");
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    private void DestroyAllObjects()
+    {
+        GameObject[] allObjects = FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj != gameObject)
+                Destroy(obj);
+        }
     }
 
     public void ActivateLaserPowerUp()
