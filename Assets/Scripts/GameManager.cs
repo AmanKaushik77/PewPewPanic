@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +12,11 @@ public class GameManager : MonoBehaviour
     [Header("Power-Up Settings")]
     public float powerUpDuration = 10f;
     public float speedBuffMultiplier = 1.5f;
-    public GameObject laserPrefab; // Optional: if you want to spawn laser visuals
+    public GameObject laserPrefab;
+
+    [Header("Game Over Settings")]
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
 
     private int currentScore = 0;
     private int lives = 5;
@@ -35,6 +40,8 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("WaveText UI element is not assigned in the inspector.");
         }
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
     }
 
     public void SetWave(int newWave)
@@ -52,7 +59,6 @@ public class GameManager : MonoBehaviour
             Canvas.ForceUpdateCanvases();
         }
         yield return new WaitForSeconds(2f);
-
         currentWave = newWave;
         if (waveText != null)
         {
@@ -85,9 +91,7 @@ public class GameManager : MonoBehaviour
         currentScore += scoreToAdd;
         Debug.Log("Score increased by " + scoreToAdd + ". New score: " + currentScore);
         if (scoreCounterUI != null)
-        {
             scoreCounterUI.UpdateScore(currentScore);
-        }
     }
 
     public void EnemyPassedBoundary()
@@ -97,7 +101,7 @@ public class GameManager : MonoBehaviour
         if (lives <= 0)
         {
             Debug.Log("Game Over");
-            // Insert game-over logic here.
+            GameOver();
         }
     }
 
@@ -109,7 +113,21 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("LivesText UI element is not assigned in the inspector.");
     }
 
-    // Power-up methods
+    private void GameOver()
+    {
+        Time.timeScale = 0f;
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+        StartCoroutine(RestartGameAfterDelay());
+    }
+
+    private IEnumerator RestartGameAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(2f);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Main Menu");
+    }
+
     public void ActivateLaserPowerUp()
     {
         StartCoroutine(LaserPowerUpRoutine());
@@ -124,10 +142,7 @@ public class GameManager : MonoBehaviour
     {
         HasLaser = true;
         Debug.Log("Laser Power-Up Activated!");
-        // Add any visual or audio effects here if needed
-
         yield return new WaitForSeconds(powerUpDuration);
-
         HasLaser = false;
         Debug.Log("Laser Power-Up Expired!");
     }
@@ -135,10 +150,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator SpeedBuffRoutine()
     {
         SpeedMultiplier = speedBuffMultiplier;
-        Debug.Log($"Speed Buff Activated! Multiplier: {SpeedMultiplier}");
-
+        Debug.Log("Speed Buff Activated! Multiplier: " + SpeedMultiplier);
         yield return new WaitForSeconds(powerUpDuration);
-
         SpeedMultiplier = 1f;
         Debug.Log("Speed Buff Expired!");
     }

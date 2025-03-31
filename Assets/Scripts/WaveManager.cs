@@ -17,7 +17,6 @@ public class WaveManager : MonoBehaviour
 
     [Header("Post-Wave Boss & Fast Enemy Settings")]
     public Vector3 bossShipSpawnPosition = new Vector3(0f, 20f, 175f);
-    public int fastEnemyShipCount = 7;
     public float fastEnemySpawnInterval = 5f;
 
     [Header("References (Prefabs)")]
@@ -108,22 +107,24 @@ public class WaveManager : MonoBehaviour
 
     void SpawnBossObjects()
     {
-        Instantiate(bossShipPrefab, bossShipSpawnPosition, Quaternion.identity);
+        // Instantiate the BossShip and keep a reference to it.
+        GameObject boss = Instantiate(bossShipPrefab, bossShipSpawnPosition, Quaternion.identity);
         Debug.Log("BossShip spawned at: " + bossShipSpawnPosition);
-        StartCoroutine(SpawnFastEnemyShips());
+        // Start continuously spawning fast enemy ships until the boss is destroyed.
+        StartCoroutine(SpawnFastEnemyShips(boss));
     }
 
-    IEnumerator SpawnFastEnemyShips()
+    IEnumerator SpawnFastEnemyShips(GameObject boss)
     {
-        for (int i = 0; i < fastEnemyShipCount; i++)
+        while (boss != null)
         {
             float randomX = Random.Range(xMin, xMax);
             float randomY = Random.Range(yMin, yMax);
             Vector3 spawnPosition = new Vector3(randomX, randomY, fixedZ);
 
-            Instantiate(fastEnemyShipPrefab, spawnPosition, Quaternion.identity);
+            // Rotate 180 degrees on the Y axis.
+            Instantiate(fastEnemyShipPrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
             Debug.Log("FastEnemyShip spawned at: " + spawnPosition);
-
             yield return new WaitForSeconds(fastEnemySpawnInterval);
         }
     }
