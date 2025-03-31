@@ -8,7 +8,7 @@ public class BulletShooter : MonoBehaviour
     public RectTransform crosshair;
     public float bulletSpeed = 20f;
     public float laserSpeed = 50f;
-    public float crosshairRange = 100f;
+    public float crosshairRange = 200f;
 
     private Camera mainCamera;
     private GameManager gameManager;

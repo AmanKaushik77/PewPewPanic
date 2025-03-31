@@ -51,7 +51,7 @@ public class EnemyManager : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            GameManager gm = FindObjectOfType<GameManager>();
+            GameManager gm = FindAnyObjectByType<GameManager>();
             if (gm != null)
             {
                 // Use CurrentWave for non-boss enemies, fixed wave 4 for boss
