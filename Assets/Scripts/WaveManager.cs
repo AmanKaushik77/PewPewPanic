@@ -107,12 +107,11 @@ public class WaveManager : MonoBehaviour
 
     void SpawnBossObjects()
     {
-        // Instantiate the BossShip and keep a reference to it.
-        GameObject boss = Instantiate(bossShipPrefab, bossShipSpawnPosition, Quaternion.identity);
+        GameObject boss = Instantiate(bossShipPrefab, bossShipSpawnPosition, Quaternion.Euler(0, 180, 0));
         Debug.Log("BossShip spawned at: " + bossShipSpawnPosition);
-        // Start continuously spawning fast enemy ships until the boss is destroyed.
         StartCoroutine(SpawnFastEnemyShips(boss));
     }
+
 
     IEnumerator SpawnFastEnemyShips(GameObject boss)
     {

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private ScoreCounterUI scoreCounterUI;
+    [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI livesText;
     [SerializeField] private TextMeshProUGUI waveText;
 
@@ -16,16 +16,17 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Over Settings")]
     [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private string mainMenuSceneName = "MainMenu";
+    [SerializeField] private string mainMenuSceneName = "Main Menu";
+
+    [Header("Complete Screen Settings")]
+    [SerializeField] private GameObject completePanel;
 
     private int currentScore = 0;
     private int lives = 5;
     private int currentWave = 1;
 
-    // Power-up states
     public bool HasLaser { get; private set; } = false;
     public float SpeedMultiplier { get; private set; } = 1f;
-
     public int CurrentWave { get { return currentWave; } }
 
     private void Start()
@@ -36,12 +37,15 @@ public class GameManager : MonoBehaviour
             waveText.text = "Wave: " + currentWave;
             Debug.Log("Initial WaveText: " + waveText.text);
         }
-        else
+        if (scoreText != null)
         {
-            Debug.LogWarning("WaveText UI element is not assigned in the inspector.");
+            scoreText.text = "Score: 0";
+            Debug.Log("Initial ScoreText: " + scoreText.text);
         }
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
+        if (completePanel != null)
+            completePanel.SetActive(false);
     }
 
     public void SetWave(int newWave)
@@ -90,8 +94,8 @@ public class GameManager : MonoBehaviour
         }
         currentScore += scoreToAdd;
         Debug.Log("Score increased by " + scoreToAdd + ". New score: " + currentScore);
-        if (scoreCounterUI != null)
-            scoreCounterUI.UpdateScore(currentScore);
+        if (scoreText != null)
+            scoreText.text = "Score: " + currentScore;
     }
 
     public void EnemyPassedBoundary()
@@ -125,7 +129,22 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(2f);
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Main Menu");
+        SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    public void BossDestroyed()
+    {
+        Time.timeScale = 0f;
+        if (completePanel != null)
+            completePanel.SetActive(true);
+        StartCoroutine(BossRestartAfterDelay());
+    }
+
+    private IEnumerator BossRestartAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(5f);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 
     public void ActivateLaserPowerUp()
