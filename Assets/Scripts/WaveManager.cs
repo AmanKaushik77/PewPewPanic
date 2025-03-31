@@ -17,6 +17,7 @@ public class WaveManager : MonoBehaviour
 
     [Header("Post-Wave Boss & Fast Enemy Settings")]
     public Vector3 bossShipSpawnPosition = new Vector3(0f, 20f, 175f);
+    public int fastEnemyShipCount = 7;
     public float fastEnemySpawnInterval = 5f;
 
     [Header("References (Prefabs)")]
@@ -29,7 +30,9 @@ public class WaveManager : MonoBehaviour
     private bool powerUpSelected = false;
 
     private GameManager gameManager;
+    private AudioManager audioManager; // Add reference to AudioManager
     private System.Collections.Generic.List<GameObject> activeEnemies = new System.Collections.Generic.List<GameObject>();
+    private GameObject bossInstance;
 
     private void Start()
     {
@@ -49,6 +52,14 @@ public class WaveManager : MonoBehaviour
             Debug.LogError("GameManager not found in the scene!");
             return;
         }
+
+        audioManager = FindObjectOfType<AudioManager>(); // Get AudioManager reference
+        if (audioManager == null)
+        {
+            Debug.LogError("AudioManager not found in the scene!");
+            return;
+        }
+
         powerUpPanel.SetActive(false);
         StartCoroutine(SpawnWaves());
     }
@@ -85,41 +96,50 @@ public class WaveManager : MonoBehaviour
                 powerUpSelected = false;
                 powerUpPanel.SetActive(true);
                 Time.timeScale = 0f;
+
                 yield return new WaitUntil(() => powerUpSelected);
+
                 Time.timeScale = 1f;
                 powerUpPanel.SetActive(false);
                 yield return new WaitForSeconds(timeBetweenWaves);
             }
         }
         Debug.Log("All normal waves completed. Spawning BossShip and FastEnemyShips...");
-        SpawnBossObjects();
+        yield return StartCoroutine(SpawnBossAndFastEnemies());
     }
 
-    void SpawnBossObjects()
+    IEnumerator SpawnBossAndFastEnemies()
     {
-        GameObject boss = Instantiate(bossShipPrefab, bossShipSpawnPosition, Quaternion.Euler(0, 180, 0));
+        bossInstance = Instantiate(bossShipPrefab, bossShipSpawnPosition, Quaternion.identity);
         Debug.Log("BossShip spawned at: " + bossShipSpawnPosition);
-        StartCoroutine(SpawnFastEnemyShips(boss));
-    }
 
-    IEnumerator SpawnFastEnemyShips(GameObject boss)
-    {
-        while (boss != null)
+        for (int i = 0; i < fastEnemyShipCount; i++)
         {
             float randomX = Random.Range(xMin, xMax);
             float randomY = Random.Range(yMin, yMax);
             Vector3 spawnPosition = new Vector3(randomX, randomY, fixedZ);
-            Instantiate(fastEnemyShipPrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
+            Instantiate(fastEnemyShipPrefab, spawnPosition, Quaternion.identity);
             Debug.Log("FastEnemyShip spawned at: " + spawnPosition);
             yield return new WaitForSeconds(fastEnemySpawnInterval);
         }
-        Debug.Log("Boss has been destroyed. Notifying GameManager.");
-        gameManager.BossDestroyed();
+
+        while (bossInstance != null)
+        {
+            float randomX = Random.Range(xMin, xMax);
+            float randomY = Random.Range(yMin, yMax);
+            Vector3 spawnPosition = new Vector3(randomX, randomY, fixedZ);
+            Instantiate(fastEnemyShipPrefab, spawnPosition, Quaternion.identity);
+            Debug.Log("Additional FastEnemyShip spawned at: " + spawnPosition);
+            yield return new WaitForSeconds(fastEnemySpawnInterval);
+        }
+
+        Debug.Log("Boss destroyed, stopping fast enemy spawning.");
     }
 
     public void SelectLaserPowerUp()
     {
         gameManager.ActivateLaserPowerUp();
+        audioManager.PlayPowerUpSound(); // Play sound when power-up is chosen
         Debug.Log("Laser Power-Up Selected");
         powerUpSelected = true;
     }
@@ -127,6 +147,7 @@ public class WaveManager : MonoBehaviour
     public void SelectSpeedBuffPowerUp()
     {
         gameManager.ActivateSpeedBuff();
+        audioManager.PlayPowerUpSound(); // Play sound when power-up is chosen
         Debug.Log("Speed Buff Power-Up Selected");
         powerUpSelected = true;
     }
