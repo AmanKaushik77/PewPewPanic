@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI waveText;
 
     [Header("Power-Up Settings")]
-    public float powerUpDuration = 10f;
+    public float powerUpDuration = 10f; // Medium difficulty base value
     public float speedBuffMultiplier = 1.5f;
     public GameObject laserPrefab;
 
@@ -21,8 +21,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject completePanel;
 
     private int currentScore = 0;
-    private int lives = 5;
+    private int lives; // Set based on difficulty
     private int currentWave = 1;
+    private float adjustedPowerUpDuration;
 
     public bool HasLaser { get; private set; } = false;
     public float SpeedMultiplier { get; private set; } = 1f;
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        AdjustDifficultySettings();
         Time.timeScale = 1f;
         UpdateLivesUI();
         if (waveText != null)
@@ -42,10 +44,31 @@ public class GameManager : MonoBehaviour
             scoreText.text = "Score: 0";
             Debug.Log("Initial ScoreText: Score: 0");
         }
-        if (gameOverPanel != null) 
+        if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
-        if (completePanel != null) 
+        if (completePanel != null)
             completePanel.SetActive(false);
+    }
+
+    void AdjustDifficultySettings()
+    {
+        int difficulty = DifficultyManager.CurrentDifficulty;
+        switch (difficulty)
+        {
+            case 1: // Easy
+                lives = 4; // Updated to 4
+                adjustedPowerUpDuration = powerUpDuration * 1.5f;
+                break;
+            case 2: // Medium
+                lives = 3; // Updated to 3
+                adjustedPowerUpDuration = powerUpDuration;
+                break;
+            case 3: // Hard
+                lives = 2; // Updated to 2
+                adjustedPowerUpDuration = powerUpDuration * 0.75f;
+                break;
+        }
+        Debug.Log($"Difficulty set to {difficulty}: Lives: {lives}, PowerUp Duration: {adjustedPowerUpDuration}");
     }
 
     public void SetWave(int newWave)
@@ -102,10 +125,11 @@ public class GameManager : MonoBehaviour
     public void EnemyPassedBoundary()
     {
         lives--;
+        Debug.Log($"Enemy passed boundary! Lives remaining: {lives}");
         UpdateLivesUI();
         if (lives <= 0)
         {
-            Debug.Log("Game Over");
+            Debug.Log("Game Over triggered: No lives remaining");
             GameOver();
         }
     }
@@ -123,6 +147,8 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f;
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
+        else
+            Debug.LogWarning("GameOverPanel is not assigned in the inspector.");
         StartCoroutine(RestartGameAfterDelay());
     }
 
@@ -184,7 +210,7 @@ public class GameManager : MonoBehaviour
     {
         HasLaser = true;
         Debug.Log("Laser Power-Up Activated!");
-        yield return new WaitForSeconds(powerUpDuration);
+        yield return new WaitForSeconds(adjustedPowerUpDuration);
         HasLaser = false;
         Debug.Log("Laser Power-Up Expired!");
     }
@@ -193,7 +219,7 @@ public class GameManager : MonoBehaviour
     {
         SpeedMultiplier = speedBuffMultiplier;
         Debug.Log("Speed Buff Activated! Multiplier: " + SpeedMultiplier);
-        yield return new WaitForSeconds(powerUpDuration);
+        yield return new WaitForSeconds(adjustedPowerUpDuration);
         SpeedMultiplier = 1f;
         Debug.Log("Speed Buff Expired!");
     }

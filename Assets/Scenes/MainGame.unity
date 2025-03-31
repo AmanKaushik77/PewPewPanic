@@ -237,7 +237,6 @@ MonoBehaviour:
   speedBuffMultiplier: 1.5
   laserPrefab: {fileID: 6882501285611671365, guid: 424feb8299852b34ebf40ce9a9174829, type: 3}
   gameOverPanel: {fileID: 1694603902}
-  mainMenuSceneName: MainMenu
   completePanel: {fileID: 838226463}
 --- !u!1 &108394925
 GameObject:
@@ -376,7 +375,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3398711c50404367966822c57375b40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveEnemyCounts: 010000000100000001000000
   spawnInterval: 4
   timeBetweenWaves: 5
   xMin: -70
@@ -2362,11 +2360,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da33e278b9c5d4a9e863a44a79a2b3d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 1275295671}
+  enemy: {fileID: 0}
   health: 1
   moveSpeed: 10
   moveDirection: {x: 0, y: 0, z: -1}
-  isBoss: 1
+  isBoss: 0
   wave: 3
 --- !u!1 &1364213610
 GameObject:
@@ -3978,7 +3976,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 01e2dadc46c344ae8bb6ab7a25bf32c1, type: 2}
+  - {fileID: 2100000, guid: 7d3a37104c129c943a6204c5aea41136, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

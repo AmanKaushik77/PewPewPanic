@@ -17,8 +17,8 @@ public class BulletShooter : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
-        gameManager = FindObjectOfType<GameManager>();
-        audioManager = FindObjectOfType<AudioManager>();
+        gameManager = FindFirstObjectByType<GameManager>();
+        audioManager = FindFirstObjectByType<AudioManager>();
 
         if (gameManager == null)
             Debug.LogError("GameManager not found!");
@@ -47,8 +47,9 @@ public class BulletShooter : MonoBehaviour
             return;
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        Transform target = bulletTarget;
+        Transform target = bulletTarget; // Default target if no enemy is found
         float closestDistance = float.MaxValue;
+        Transform closestEnemy = null; // Only used for lasers
 
         // Convert crosshair's screen position to a Vector2
         Vector2 crosshairScreenPos = crosshair.position;
@@ -62,11 +63,12 @@ public class BulletShooter : MonoBehaviour
             Vector3 enemyScreenPos = mainCamera.WorldToScreenPoint(enemy.transform.position);
             float distance2D = Vector2.Distance(crosshairScreenPos, new Vector2(enemyScreenPos.x, enemyScreenPos.y));
 
-            // Only pick the enemy if it's within the crosshair range
+            // Pick the closest enemy within crosshair range
             if (distance3D < closestDistance && distance2D <= crosshairRange)
             {
                 closestDistance = distance3D;
                 target = enemy.transform;
+                closestEnemy = enemy.transform; // Store for laser tracking
             }
         }
 
@@ -82,8 +84,8 @@ public class BulletShooter : MonoBehaviour
         // Aim bullet/laser at the chosen target position
         Vector3 direction = (target.position - gun.position).normalized;
         Quaternion spawnRotation = (gameManager != null && gameManager.HasLaser)
-            ? Quaternion.LookRotation(direction) * Quaternion.Euler(90f, 0f, 0f)
-            : Quaternion.identity;
+            ? Quaternion.LookRotation(direction) * Quaternion.Euler(90f, 0f, 0f) // Lasers with original rotation
+            : Quaternion.identity; // Bullets unrotated
 
         // Instantiate the projectile
         GameObject projectile = Instantiate(projectilePrefab, gun.position, spawnRotation);
@@ -91,7 +93,9 @@ public class BulletShooter : MonoBehaviour
 
         if (bulletScript != null)
         {
-            bulletScript.SetTarget(target.position, speed);
+            // Pass enemy Transform only for lasers, null for bullets
+            Transform laserTarget = (gameManager != null && gameManager.HasLaser) ? closestEnemy : null;
+            bulletScript.SetTarget(target.position, speed, laserTarget);
         }
     }
 }
