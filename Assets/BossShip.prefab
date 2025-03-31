@@ -80,6 +80,7 @@ GameObject:
   - component: {fileID: 4773132603076738508}
   - component: {fileID: 7339008779107272966}
   - component: {fileID: 8433195337218381158}
+  - component: {fileID: 8493944812776580956}
   m_Layer: 0
   m_Name: BossShip
   m_TagString: Enemy
@@ -174,3 +175,16 @@ MonoBehaviour:
   moveDirection: {x: 0, y: 0, z: -1}
   isBoss: 1
   wave: 1
+--- !u!114 &8493944812776580956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9140506148565559507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12e2232fd56c34440b1172a67de09070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 2

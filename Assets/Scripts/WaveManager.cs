@@ -17,7 +17,6 @@ public class WaveManager : MonoBehaviour
 
     [Header("Post-Wave Boss & Fast Enemy Settings")]
     public Vector3 bossShipSpawnPosition = new Vector3(0f, 20f, 175f);
-    public int fastEnemyShipCount = 7;
     public float fastEnemySpawnInterval = 5f;
 
     [Header("References (Prefabs)")]
@@ -30,9 +29,7 @@ public class WaveManager : MonoBehaviour
     private bool powerUpSelected = false;
 
     private GameManager gameManager;
-    private AudioManager audioManager; // Add reference to AudioManager
     private System.Collections.Generic.List<GameObject> activeEnemies = new System.Collections.Generic.List<GameObject>();
-    private GameObject bossInstance;
 
     private void Start()
     {
@@ -52,14 +49,6 @@ public class WaveManager : MonoBehaviour
             Debug.LogError("GameManager not found in the scene!");
             return;
         }
-
-        audioManager = FindObjectOfType<AudioManager>(); // Get AudioManager reference
-        if (audioManager == null)
-        {
-            Debug.LogError("AudioManager not found in the scene!");
-            return;
-        }
-
         powerUpPanel.SetActive(false);
         StartCoroutine(SpawnWaves());
     }
@@ -76,7 +65,7 @@ public class WaveManager : MonoBehaviour
                 float randomX = Random.Range(xMin, xMax);
                 float randomY = Random.Range(yMin, yMax);
                 Vector3 spawnPosition = new Vector3(randomX, randomY, fixedZ);
-                GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+                GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
                 activeEnemies.Add(enemy);
                 Debug.Log("Spawned normal enemy at: " + spawnPosition);
                 yield return new WaitForSeconds(spawnInterval);
@@ -96,50 +85,63 @@ public class WaveManager : MonoBehaviour
                 powerUpSelected = false;
                 powerUpPanel.SetActive(true);
                 Time.timeScale = 0f;
-
                 yield return new WaitUntil(() => powerUpSelected);
-
                 Time.timeScale = 1f;
                 powerUpPanel.SetActive(false);
                 yield return new WaitForSeconds(timeBetweenWaves);
             }
         }
         Debug.Log("All normal waves completed. Spawning BossShip and FastEnemyShips...");
-        yield return StartCoroutine(SpawnBossAndFastEnemies());
+        SpawnBossObjects();
     }
 
-    IEnumerator SpawnBossAndFastEnemies()
+    void SpawnBossObjects()
     {
-        bossInstance = Instantiate(bossShipPrefab, bossShipSpawnPosition, Quaternion.identity);
+        GameObject boss = Instantiate(bossShipPrefab, bossShipSpawnPosition, Quaternion.Euler(0, 180, 0));
         Debug.Log("BossShip spawned at: " + bossShipSpawnPosition);
-
-        for (int i = 0; i < fastEnemyShipCount; i++)
-        {
-            float randomX = Random.Range(xMin, xMax);
-            float randomY = Random.Range(yMin, yMax);
-            Vector3 spawnPosition = new Vector3(randomX, randomY, fixedZ);
-            Instantiate(fastEnemyShipPrefab, spawnPosition, Quaternion.identity);
-            Debug.Log("FastEnemyShip spawned at: " + spawnPosition);
-            yield return new WaitForSeconds(fastEnemySpawnInterval);
-        }
-
-        while (bossInstance != null)
-        {
-            float randomX = Random.Range(xMin, xMax);
-            float randomY = Random.Range(yMin, yMax);
-            Vector3 spawnPosition = new Vector3(randomX, randomY, fixedZ);
-            Instantiate(fastEnemyShipPrefab, spawnPosition, Quaternion.identity);
-            Debug.Log("Additional FastEnemyShip spawned at: " + spawnPosition);
-            yield return new WaitForSeconds(fastEnemySpawnInterval);
-        }
-
-        Debug.Log("Boss destroyed, stopping fast enemy spawning.");
+        StartCoroutine(SpawnFastEnemyShips(boss));
     }
+
+    IEnumerator SpawnFastEnemyShips(GameObject boss)
+{
+    while (boss != null)
+    {
+        // 1. Check Boss z-position
+        if (boss.transform.position.z == -1f)
+        {
+            Debug.Log("Boss crossed z = -2.5. Pausing the game and showing Game Over screen.");
+            
+            // 2. Pause the game
+            Time.timeScale = 0f;
+
+            // 3. Display Game Over UI / Logic
+            gameManager.GameOver(); // Assuming this method handles the Game Over screen
+
+            // 4. End this coroutine
+            yield break;
+        }
+
+        // Regular spawn logic (unchanged)
+        float randomX = Random.Range(xMin, xMax);
+        float randomY = Random.Range(yMin, yMax);
+        Vector3 spawnPosition = new Vector3(randomX, randomY, fixedZ);
+
+        Instantiate(fastEnemyShipPrefab, spawnPosition, Quaternion.Euler(0, 180, 0));
+        Debug.Log("FastEnemyShip spawned at: " + spawnPosition);
+
+        yield return new WaitForSeconds(fastEnemySpawnInterval);
+    }
+
+    // If the Boss is destroyed (null), the loop will end normally
+    Debug.Log("Boss has been destroyed. Notifying GameManager.");
+    gameManager.BossDestroyed();
+}
+
+
 
     public void SelectLaserPowerUp()
     {
         gameManager.ActivateLaserPowerUp();
-        audioManager.PlayPowerUpSound(); // Play sound when power-up is chosen
         Debug.Log("Laser Power-Up Selected");
         powerUpSelected = true;
     }
@@ -147,7 +149,6 @@ public class WaveManager : MonoBehaviour
     public void SelectSpeedBuffPowerUp()
     {
         gameManager.ActivateSpeedBuff();
-        audioManager.PlayPowerUpSound(); // Play sound when power-up is chosen
         Debug.Log("Speed Buff Power-Up Selected");
         powerUpSelected = true;
     }
