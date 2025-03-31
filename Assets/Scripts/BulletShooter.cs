@@ -12,18 +12,24 @@ public class BulletShooter : MonoBehaviour
 
     private Camera mainCamera;
     private GameManager gameManager;
+    private AudioManager audioManager; // Add reference to AudioManager
 
     void Start()
     {
         mainCamera = Camera.main;
         gameManager = FindObjectOfType<GameManager>();
+        audioManager = FindObjectOfType<AudioManager>(); // Get AudioManager reference
         if (gameManager == null) Debug.LogError("GameManager not found!");
+        if (audioManager == null) Debug.LogError("AudioManager not found!");
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && Time.timeScale > 0f)
         {
+            // Play sound once per click
+            audioManager.PlayShootSound();
+            // Shoot from both guns
             Shoot(leftGun);
             Shoot(rightGun);
         }
@@ -58,13 +64,10 @@ public class BulletShooter : MonoBehaviour
             return;
         }
 
-        // Calculate direction to target
         Vector3 direction = (target.position - gun.position).normalized;
-
-        // For laser: Align local Z (long axis) with target direction, keeping prefab's X = 90
         Quaternion spawnRotation = (gameManager != null && gameManager.HasLaser) ?
-            Quaternion.LookRotation(direction) * Quaternion.Euler(90f, 0f, 0f) : // Laser: Point Z at target
-            Quaternion.identity; // Bullet: Default orientation
+            Quaternion.LookRotation(direction) * Quaternion.Euler(90f, 0f, 0f) :
+            Quaternion.identity;
 
         GameObject projectile = Instantiate(projectilePrefab, gun.position, spawnRotation);
         BulletScript bulletScript = projectile.GetComponent<BulletScript>();
