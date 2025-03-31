@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 246d4b1ad4a63004d8fcf3949494e5b3, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 3e8bc5155c4c9ed46a63ac64c06408f3, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -154,6 +154,11 @@ MonoBehaviour:
   playerRigidbody: {fileID: 616764222}
   moveSpeed: 40
   inputManager: {fileID: 17322583}
+  xMin: -70
+  xMax: 70
+  yMin: 0
+  yMax: 50
+  fixedZ: 0
 --- !u!114 &17322582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,7 +385,6 @@ MonoBehaviour:
   yMax: 50
   fixedZ: 150
   bossShipSpawnPosition: {x: 0, y: 20, z: 175}
-  fastEnemyShipCount: 7
   fastEnemySpawnInterval: 5
   enemyPrefab: {fileID: 7808116914969374433, guid: 9153583b362674eb781eb707c6094577, type: 3}
   fastEnemyShipPrefab: {fileID: 6068994860810166840, guid: e31ea283d77734335baf3bf7d160a864, type: 3}
@@ -2759,13 +2763,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68a0f17571a8e470691e11b74e85ea59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentScore: {fileID: 0}
-  UpdatedScore: {fileID: 0}
-  coinTextContainer: {fileID: 0}
-  duration: 0.4
-  animationCurve: 28
-  containerInitPosition: 0
-  moveAmount: 0
 --- !u!1 &1588957366
 GameObject:
   m_ObjectHideFlags: 0
