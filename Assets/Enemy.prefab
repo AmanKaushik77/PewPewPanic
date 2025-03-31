@@ -1008,6 +1008,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 7808116914969374433}
+  explosionPrefab: {fileID: 241258168589290346, guid: e2074db568a1f4dbbb9b18675294dd0e, type: 3}
   health: 3
   moveSpeed: 10
   moveDirection: {x: 0, y: 0, z: -1}

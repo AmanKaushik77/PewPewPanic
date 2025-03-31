@@ -106,22 +106,7 @@ public class WaveManager : MonoBehaviour
 {
     while (boss != null)
     {
-        // 1. Check Boss z-position
-        if (boss.transform.position.z == -1f)
-        {
-            Debug.Log("Boss crossed z = -2.5. Pausing the game and showing Game Over screen.");
-            
-            // 2. Pause the game
-            Time.timeScale = 0f;
-
-            // 3. Display Game Over UI / Logic
-            gameManager.GameOver(); // Assuming this method handles the Game Over screen
-
-            // 4. End this coroutine
-            yield break;
-        }
-
-        // Regular spawn logic (unchanged)
+    
         float randomX = Random.Range(xMin, xMax);
         float randomY = Random.Range(yMin, yMax);
         Vector3 spawnPosition = new Vector3(randomX, randomY, fixedZ);
