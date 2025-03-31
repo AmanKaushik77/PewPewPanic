@@ -172,5 +172,5 @@ MonoBehaviour:
   health: 10
   moveSpeed: 30
   moveDirection: {x: 0, y: 0, z: -1}
-  isBoss: 1
+  isBoss: 0
   wave: 1
