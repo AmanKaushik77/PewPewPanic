@@ -1011,6 +1011,8 @@ MonoBehaviour:
   health: 3
   moveSpeed: 10
   moveDirection: {x: 0, y: 0, z: -1}
+  isBoss: 0
+  wave: 1
 --- !u!54 &4054404030588583848
 Rigidbody:
   m_ObjectHideFlags: 0
