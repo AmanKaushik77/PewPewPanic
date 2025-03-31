@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("LivesText UI element is not assigned in the inspector.");
     }
 
-    private void GameOver()
+    public void GameOver()
     {
         Time.timeScale = 0f;
         if (gameOverPanel != null)
