@@ -7,16 +7,13 @@ public class DifficultyManager : MonoBehaviour
     public Slider difficultySlider;
     public TMP_Text difficultyText;
 
-    // Static variable to store difficulty (1 = Easy, 2 = Medium, 3 = Hard)
     public static int CurrentDifficulty { get; private set; } = 1;
 
     void Start()
     {
-        // Load saved difficulty or default to Easy (1)
         CurrentDifficulty = PlayerPrefs.GetInt("Difficulty", 1);
         difficultySlider.value = CurrentDifficulty;
 
-        // Add listener and update initial text
         difficultySlider.onValueChanged.AddListener(UpdateDifficulty);
         UpdateDifficultyText(CurrentDifficulty);
     }

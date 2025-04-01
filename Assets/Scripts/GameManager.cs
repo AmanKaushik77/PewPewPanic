@@ -56,15 +56,15 @@ public class GameManager : MonoBehaviour
         switch (difficulty)
         {
             case 1: // Easy
-                lives = 4; // Updated to 4
+                lives = 4; 
                 adjustedPowerUpDuration = powerUpDuration * 1.5f;
                 break;
             case 2: // Medium
-                lives = 3; // Updated to 3
+                lives = 3; 
                 adjustedPowerUpDuration = powerUpDuration;
                 break;
             case 3: // Hard
-                lives = 2; // Updated to 2
+                lives = 2; 
                 adjustedPowerUpDuration = powerUpDuration * 0.75f;
                 break;
         }

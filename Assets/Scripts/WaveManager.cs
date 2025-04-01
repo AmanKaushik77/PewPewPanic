@@ -7,8 +7,8 @@ public class WaveManager : MonoBehaviour
     private int[] easyWaveEnemyCounts = new int[] { 7, 7, 7 };   // 7 enemies per wave for Easy
     private int[] mediumWaveEnemyCounts = new int[] { 9, 9, 9 }; // 9 enemies per wave for Medium
     private int[] hardWaveEnemyCounts = new int[] { 10, 10, 10 }; // 10 enemies per wave for Hard
-    public float spawnInterval = 1f; // Base value, adjusted to Hard's 0.45f
-    public float timeBetweenWaves = 3f; // Base value, adjusted to Hard's 1.5f
+    public float spawnInterval = 1f; 
+    public float timeBetweenWaves = 3f; 
 
     [Header("Spawn Area Settings")]
     public float xMin = -70f;
@@ -19,7 +19,7 @@ public class WaveManager : MonoBehaviour
 
     [Header("Post-Wave Boss & Fast Enemy Settings")]
     public Vector3 bossShipSpawnPosition = new Vector3(0f, 20f, 175f);
-    public float fastEnemySpawnInterval = 5f; // Base value, adjusted to Hard's 2.25f
+    public float fastEnemySpawnInterval = 5f; 
 
     [Header("References (Prefabs)")]
     public GameObject enemyPrefab;

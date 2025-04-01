@@ -12,7 +12,6 @@ public class BossShip : MonoBehaviour
         if (health <= 0)
         {
             destroyed = true;
-            // This will make bossInstance == null from WaveManager's perspective
             Destroy(gameObject);
         }
     }

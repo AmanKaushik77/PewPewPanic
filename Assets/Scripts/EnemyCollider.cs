@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyCollider : MonoBehaviour
 {
-    public GameObject enemy;  // The main enemy object (parent).
+    public GameObject enemy; 
 
     private void OnTriggerEnter(Collider other)
     {
@@ -15,7 +15,7 @@ public class EnemyCollider : MonoBehaviour
             GameManager gm = FindFirstObjectByType<GameManager>();
             if (manager != null)
             {
-                int damage = (gm != null && gm.HasLaser) ? 5 : 1; // Match BulletScript damage
+                int damage = (gm != null && gm.HasLaser) ? 5 : 1; 
                 manager.TakeDamage(damage);
                 Debug.Log($"Damage {damage} delegated to EnemyManager");
             }
