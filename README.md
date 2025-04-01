@@ -36,4 +36,5 @@ https://github.com/user-attachments/assets/9d4e5bfd-8808-4ad2-a5a0-48d25f3b0214
 - Wave logic and structure
 - Powerup logic
 - Boss logic
-- Game Juice ideas (Music, shooting sounds, powerups, boss moved towards player) 
+- Game Juice ideas (Music, shooting sounds, powerups, boss moved towards player)
+- General bug fixes
