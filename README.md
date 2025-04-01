@@ -6,6 +6,10 @@ https://ishaanshaffir.itch.io/pewpewpanic
 ## Demo Video:
 
 
+
+https://github.com/user-attachments/assets/9d4e5bfd-8808-4ad2-a5a0-48d25f3b0214
+
+
 ## Features:
 
 ### Aman:
@@ -27,7 +31,7 @@ https://ishaanshaffir.itch.io/pewpewpanic
 - Music options (options page)
 - Difficulty slider & options (easy, medium, hard)
 
-### Together: 
+### What we together on: 
 - Game logic and structure
 - Wave logic and structure
 - Powerup logic
