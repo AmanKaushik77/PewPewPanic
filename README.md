@@ -1,4 +1,4 @@
-# Space Invadors: PEW PEW PANIC!
+# Space Invadors: PewPewPANIC!
 
 ## Playable Link
 https://ishaanshaffir.itch.io/pewpewpanic
