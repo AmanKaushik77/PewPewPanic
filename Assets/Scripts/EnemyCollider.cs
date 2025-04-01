@@ -3,7 +3,6 @@ using UnityEngine;
 public class EnemyCollider : MonoBehaviour
 {
     public GameObject enemy;  // The main enemy object (parent).
-    public int health = 5;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -12,28 +11,15 @@ public class EnemyCollider : MonoBehaviour
         if (other.CompareTag("Bullet"))
         {
             Debug.Log("Bullet hit detected!");
-            health--;
-            Debug.Log("Health is now: " + health);
-            Destroy(other.gameObject);
-
-            if (health <= 0)
+            EnemyManager manager = enemy.GetComponent<EnemyManager>();
+            GameManager gm = FindFirstObjectByType<GameManager>();
+            if (manager != null)
             {
-                int enemyWave = 0;
-                EnemyManager manager = enemy.GetComponent<EnemyManager>();
-                GameManager gm = FindFirstObjectByType<GameManager>();
-
-                if (manager != null)
-                {
-                    // Boss enemies always count as wave 4 (500 points).
-                    enemyWave = manager.isBoss ? 4 : (gm != null ? gm.CurrentWave : manager.wave);
-                }
-                Debug.Log("Enemy destroyed with wave value: " + enemyWave);
-                if (gm != null)
-                {
-                    gm.EnemyDestroyed(enemyWave);
-                }
-                Destroy(enemy);
+                int damage = (gm != null && gm.HasLaser) ? 5 : 1; // Match BulletScript damage
+                manager.TakeDamage(damage);
+                Debug.Log($"Damage {damage} delegated to EnemyManager");
             }
+            Destroy(other.gameObject);
         }
     }
 }

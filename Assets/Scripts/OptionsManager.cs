@@ -12,7 +12,7 @@ public class OptionsManager : MonoBehaviour
 
     void Start()
     {
-        audioManager = FindObjectOfType<AudioManager>();
+        audioManager = FindFirstObjectByType<AudioManager>();
         if (audioManager == null)
         {
             Debug.LogError("AudioManager not found in OptionsManager!");
